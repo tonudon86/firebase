@@ -1,24 +1,50 @@
-import logo from './logo.svg';
+ 
 import './App.css';
+import Navbar from './components/Navbar';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route 
+} from "react-router-dom";
+import Login from './components/Login';
+import Singup from './components/Singup';
+import {auth} from './components/firebase';
+import react ,{useState,useEffect} from 'react';
+import Todo from './components/Todo';
+
 
 function App() {
+  const [suser, setsuser] = useState(null)
+useEffect(() => {
+ auth.onAuthStateChanged(user=>{
+   if(user){
+   setsuser(user)
+  }
+   else {setsuser(null)}
+ })
+}, [])
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+ 
+  <Navbar suser={suser}/>
+  <Switch>
+     <div className="container">
+     <Route exact path="/login">
+         <Login/>
+          </Route>
+          <Route exact path="/singup">
+           <Singup/>
+          </Route>
+          <Route exact path="/">
+            <Todo suser={suser}/ >
+          </Route>
+     </div>
+        </Switch>
+  
+  </Router>
   );
 }
 
